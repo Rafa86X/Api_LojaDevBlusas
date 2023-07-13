@@ -2,11 +2,25 @@ import produto from "../models/Produto.js";
 
 class ProdutoController {
 
-    static findByDescription = (req, res) =>{
+    static findByDescription = async (req, res) =>{
         
-        produto.find((err, produto)=>{
-            res.status(200).json(produto)
-        })
+        try {
+
+            const { descricao } = req.query;
+
+            const regex = new RegExp(descricao, "i")
+
+            const findx = {}
+
+            if(descricao) findx.descricao = regex
+
+            const item = await produto.find(findx);
+            res.status(200).json(item)
+            
+            
+        } catch (error) {
+            res.status(500).json({ message: "Erro interno no servidor na busca" });
+        }
     }
 
     static getAll = async (req, res) =>{
