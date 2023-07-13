@@ -2,7 +2,7 @@ import produto from "../models/Produto.js";
 
 class ProdutoController {
 
-    static findByDescription = async (req, res) =>{
+    static findByDescription = async (req, res, next) =>{
         
         try {
 
@@ -14,8 +14,12 @@ class ProdutoController {
 
             if(descricao) findx.descricao = regex
 
-            const item = await produto.find(findx);
-            res.status(200).json(item)
+            const itensResp = produto.find(findx);
+
+            const numProdutos = (await produto.find(findx)).length
+            req.resultado = itensResp;
+            req.numProdutos = numProdutos;
+            next()
             
             
         } catch (error) {
@@ -28,25 +32,12 @@ class ProdutoController {
     static getAll = async (req, res, next) =>{
 
         try {
-
-            const {limite = 10, pagina = 1} = req.query;
-
-            const metodo = await produto.find()
-                .sort({ nome: 1})
-                .skip((pagina-1)*limite)
-                .limit(limite)
-            
-            const numItens = await produto.find();           
-            const numeroPaginas = numItens.length/limite;
-            const paginacao = {paginacao : {
-                numeroLivros: numItens.length,
-                paginaAtual: pagina,
-                numeroPaginas: numeroPaginas.toFixed()
-            }}
-           const resultCompleto = metodo.concat(paginacao);
-
-            res.status(200).json(resultCompleto);
-            
+       
+        const numProdutos = (await produto.find()).length
+        const getProdutos = produto.find()
+        req.resultado = getProdutos;
+        req.numProdutos = numProdutos;
+        next()           
             
         } catch (error) {
             res.status(500).json({ message: `${error}` });
