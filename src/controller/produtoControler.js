@@ -2,71 +2,86 @@ import produto from "../models/Produto.js";
 
 class ProdutoController {
 
-    static getAll = (req, res) =>{
+    static findByDescription = (req, res) =>{
         
         produto.find((err, produto)=>{
             res.status(200).json(produto)
         })
     }
 
-    static getOne = (req, res) =>{
+    static getAll = async (req, res) =>{
 
-        const id = req.params.id;
+        try {
 
-        produto.findById(id, (err, produto)=>{
-            if(!err){
-                res.status(200).json(produto)
-            }
-            else{
-                res.status(400).send({message:`${err.message} - id do produto não encontrado.`})
-            }
-        })
-
+            const item = await produto.find();
+            res.status(200).json(item)
+            
+            
+        } catch (error) {
+            res.status(500).json({ message: "Erro interno no servidor" });
+        }
         
     }
 
-    static create = (req, res) =>{
-        let livro = new produto(req.body);
+    static getOne =async (req, res) =>{
 
-        livro.save((err)=>{
-            if(err){
-                res.status(500).send({message:`${err.message} - falha ao cadastrar produto.`})
-            }
-            else{
-                res.status(201).send(livro.toJSON())
-            }
-        })
+        const id = req.params.id;
+
+        try {
+
+            const item = await produto.findById(id);
+            res.status(200).json(item)
+            
+            
+        } catch (error) {
+            res.status(404).json({ message: "Id não encontrado" });
+        }
         
     }
 
-    static updater = (req, res) =>{
+    static create = async (req, res) =>{
 
-        const id = req.params.id;
+        try {
+            let objeto = new produto(req.body);
+            
+            const item = await objeto.save();
 
-        produto.findByIdAndUpdate(id, {$set:req.body}, (err)=>{
-            if(!err){
-                res.status(200).send({message:'Produto atualizado com sucesso.'})
-            }
-            else{
-                res.status(500).send({message:`${err.message} - falha ao atualizar produto.`})
-            }
-        })
+            res.status(201).json(item);
+            
+        } catch (error) {
+            res.status(500).json({message: `${error.message} - falha ao cadastrar Objeto.`});
+        }
+
     }
 
-    static deleter = (req, res) =>{
+    static updater = async (req, res) =>{
 
-        const id = req.params.id;
+        try {
+            const id = req.params.id;
+        
+            await produto.findByIdAndUpdate(id, {$set: req.body});
+            var item = await produto.findById(id);
+            var mensagem = {"messagem":"Produto atualizado com sucesso",item};
+            res.status(200).json(mensagem)
+      
+          } catch (erro) {
+            res.status(500).send({message: erro.message});
+          }
 
-        produto.findByIdAndDelete(id, (err)=>{
-            if(!err){
-                res.status(200).send({message:'Produto deletado com sucesso.'})
-            }
-            else{
-                res.status(500).send({message:`${err.message} - falha ao deletar produto.`})
-            }
-        })
     }
 
-}
+    static deleter =async (req, res) =>{
+
+        try {
+            const id = req.params.id;
+        
+            await produto.findByIdAndDelete(id);
+            res.status(200).json({messagem:"Produto deletado com sucesso"})
+      
+          } catch (erro) {
+            res.status(500).send({message: erro.message});
+          }
+
+}   }
 
 export default ProdutoController
