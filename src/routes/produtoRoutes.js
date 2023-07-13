@@ -4,11 +4,11 @@ import ProdutoController from "../controller/produtoControler.js"
 const router = express.Router();
 
 router
-    .get("/produto", ProdutoController.listarProdutos)
-    .get("/produto/:id", ProdutoController.buscaProduto)
-    .post("/produto", ProdutoController.cadastrarProdutos)
-    .put("/produto/:id", ProdutoController.atualizarProdutos)
-    .delete("/produto/:id", ProdutoController.deletarProdutos)
+    .get("/produto", ProdutoController.getAll)
+    .get("/produto/:id", ProdutoController.getOne)
+    .post("/produto", ProdutoController.create)
+    .put("/produto/:id", ProdutoController.updater)
+    .delete("/produto/:id", ProdutoController.deleter)
 
 
 

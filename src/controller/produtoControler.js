@@ -2,14 +2,14 @@ import produto from "../models/Produto.js";
 
 class ProdutoController {
 
-    static listarProdutos = (req, res) =>{
+    static getAll = (req, res) =>{
         
         produto.find((err, produto)=>{
             res.status(200).json(produto)
         })
     }
 
-    static buscaProduto = (req, res) =>{
+    static getOne = (req, res) =>{
 
         const id = req.params.id;
 
@@ -25,7 +25,7 @@ class ProdutoController {
         
     }
 
-    static cadastrarProdutos = (req, res) =>{
+    static create = (req, res) =>{
         let livro = new produto(req.body);
 
         livro.save((err)=>{
@@ -39,7 +39,7 @@ class ProdutoController {
         
     }
 
-    static atualizarProdutos = (req, res) =>{
+    static updater = (req, res) =>{
 
         const id = req.params.id;
 
@@ -53,7 +53,7 @@ class ProdutoController {
         })
     }
 
-    static deletarProdutos = (req, res) =>{
+    static deleter = (req, res) =>{
 
         const id = req.params.id;
 
