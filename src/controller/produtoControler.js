@@ -7,20 +7,14 @@ class ProdutoController {
         try {
 
             const { descricao } = req.query;
-
             const regex = new RegExp(descricao, "i")
-
             const findx = {}
-
             if(descricao) findx.descricao = regex
-
             const itensResp = produto.find(findx);
-
             const numProdutos = (await produto.find(findx)).length
             req.resultado = itensResp;
             req.numProdutos = numProdutos;
-            next()
-            
+            next()            
             
         } catch (error) {
             res.status(500).json({ message: "Erro interno no servidor na busca" });
