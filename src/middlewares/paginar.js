@@ -14,13 +14,13 @@ try {
         
         
             
-        const numeroPaginas = numProdutos/limite
+        const numeroPaginas =  calcPagina(numProdutos,limite)
         
         const paginacao = {paginacao : {
             numeroTotalItens: numProdutos,
             numeroItensPorPagina: limite,
             paginaAtual: pagina,
-            numeroTotaldePaginas: numeroPaginas.toFixed()
+            numeroTotaldePaginas: parseInt(numeroPaginas.toFixed())
         }}
        const resultCompleto = arreyItens.concat(paginacao);
 
@@ -30,6 +30,15 @@ try {
     res.status(500).json({ message: `${error} erro no middwarer` });
     
 }
+}
+
+function calcPagina (a,b){
+    const c =a/b
+    if((c > 0.01)&&(c<0.5))
+        {return 1}
+    else
+        {return a/b}
+
 }
 
 export default paginar
