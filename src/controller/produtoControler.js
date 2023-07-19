@@ -50,7 +50,7 @@ class ProdutoController {
             
             
         } catch (error) {
-            res.status(404).json({ message: "Id não encontrado" });
+            res.status(404).json({ message: `${error.message} - Id não encontrado.`});
         }
         
     }
