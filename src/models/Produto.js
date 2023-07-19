@@ -10,6 +10,7 @@ const produtoSchema = new mongoose.Schema(
         url_imagem: {type:String, required:true},
         descricao: {type:String, required:true},
         detalhes_tecnicos: {type:String, required:true},
+        caract_busca:{type:String, required:true},
     },
     {
         versionKey: false
