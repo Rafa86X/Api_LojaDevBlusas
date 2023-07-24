@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { usuario } from "../models/Usuario.js";
 import { hashSync } from "bcrypt";
 
@@ -25,12 +24,9 @@ export class UsuarioController {
 				return res.status(400).json({ message: "User already exists" });
 			}
 
-			const id = uuid();
-
 			const senhaHasheada = hashSync(password, 10);
 
 			const usuarioCriado = await usuario.create({
-				id,
 				email,
 				password: senhaHasheada,
 			});
