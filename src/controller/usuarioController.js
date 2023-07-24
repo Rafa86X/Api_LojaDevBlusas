@@ -40,7 +40,7 @@ export class UsuarioController {
 			throw new Error();
 		} catch (error) {
 			console.log({ error });
-			return res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: `Internal server error - ${error}` });
 		}
 	}
 }
