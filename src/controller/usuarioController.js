@@ -1,46 +1,67 @@
-import { usuario } from "../models/Usuario.js";
-import { hashSync } from "bcrypt";
+import usuario from "../models/Usuario.js";
+import { hash } from "bcrypt";
+import userExist from "../service/userExists.js";
+import { AutenticadorPorEndpoit } from "../service/AutenticatorToEndPoit.js";
 
-export class UsuarioController {
-	async cadastrarUsuario(req, res) {
-		try {
-			const { email, password, passwordConfirmation } = req.body;
 
-			const camposObrigatorios = ["email", "password", "passwordConfirmation"];
+class UsuarioController {
 
-			for (const campo of camposObrigatorios) {
-				if (!req.body[campo]) {
-					return res.status(400).json({ message: `${campo} is mandatory` });
-				}
-			}
+   static gettable = () =>{ return "usuarios"}
 
-			if (password != passwordConfirmation) {
-				return res.status(400).json({ message: "Passwords did not match" });
-			}
+   static findAll = async (req, res) =>{
+        
+        try {
 
-			const existingUser = await usuario.findOne({ email });
+            const metodType = "r";
+            const token = req.headers.authorization          
+            
+            if( await AutenticadorPorEndpoit(token, this.gettable(), metodType) == false){
+                throw new Error("O usuario não tem perissão para realizar a ação")
+            }
 
-			if (existingUser) {
-				return res.status(400).json({ message: "User already exists" });
-			}
+            const result = (await usuario.find())
+            res.status(200).json(result);
+            
+        } catch (error) {
+            res.status(400).json({ message: `${error.message} - Erro na busca.`});
+        }
+    }
 
-			const senhaHasheada = hashSync(password, 10);
+    
+   static createUser = async (req, res) =>{
+        
+    try {
 
-			const usuarioCriado = await usuario.create({
-				email,
-				password: senhaHasheada,
-			});
+        const metodType = "c";
+        const token = req.headers.authorization          
+        
+        if( await AutenticadorPorEndpoit(token, this.gettable(), metodType) == false){
+            throw new Error("O usuario não tem perissão para realizar a ação")
+        }
 
-			if (usuarioCriado) {
-				return res
-					.status(201)
-					.json({ message: `User registered successfully with id ${id}` });
-			}
+        let reqUser = new usuario(req.body);
 
-			throw new Error();
-		} catch (error) {
-			console.log({ error });
-			return res.status(500).json({ message: `Internal server error - ${error}` });
-		}
-	}
+        const { email, password } = reqUser
+
+        
+        if(await userExist(email))
+            { throw new Error('Usuario ja cadastrado');}
+        else{
+            const passwordCrypto = await hash(password, 8)    
+            reqUser.password = passwordCrypto;                     
+            const newUser = await reqUser.save();
+            res.status(201).json({  usuario: newUser.email,
+                                    nome: newUser.nome,
+                                    perfil: newUser.perfil });
+        }
+       
+        
+        } catch (error) {
+            res.status(422).json({ message: `${error.message} - Erro ao cadastrar.`});
+        }
+   }
+
+
 }
+
+export default UsuarioController

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const usuarioSchema = new mongoose.Schema(
 	{
 		email: { type: String, required: true },
+		nome: { type: String, required: true },
+		perfil: { type: String, required: true },
 		password: { type: String, required: true },
 	},
 	{
@@ -12,4 +14,4 @@ const usuarioSchema = new mongoose.Schema(
 
 const usuario = mongoose.model("usuario", usuarioSchema);
 
-export { usuario };
+export default usuario;
