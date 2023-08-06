@@ -8,6 +8,10 @@ import cors from "cors";
 const routes = (app) => {
 	app.use(cors());
 
+	app.route('/').get((req, res) => {
+		res.status(200).send({titulo: "ส็็็็็็็็็็็็็็็็็็็็็็็็็༼ ຈل͜ຈ༽ส้้้้้้้้้้้้้้้้้้้้้้้ Loja DevBlusas ෴❤️෴"})
+	})
+	
 	app.use(express.json(), 
 		produtosfree, // metodo livre acesso
 		authLogin, // metodo livre acesso - produz um token

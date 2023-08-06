@@ -1,6 +1,10 @@
 import produto from "../models/Produto.js";
+import { AutenticadorPorEndpoit } from "../service/AutenticatorToEndPoit.js";
 
 class ProdutoController {
+
+
+    static gettable = () =>{ return "produtos"}
 
     static findByDescription = async (req, res, next) =>{
         
@@ -8,7 +12,7 @@ class ProdutoController {
 
             const { descricao } = req.query;
             
-
+            
             const regex = new RegExp(descricao, "i")
             const findx = {}
             if(descricao) findx.caract_busca = regex
@@ -64,6 +68,14 @@ class ProdutoController {
 
         try {
             let objeto = new produto(req.body);
+
+            const metodType = "c";
+            const token = req.headers.authorization 
+                     
+            let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+            if( testeEndpoit.testeAutorizacao == false){
+                throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
+            }
             
             const item = await objeto.save();
 
@@ -79,6 +91,14 @@ class ProdutoController {
 
         try {
             const id = req.params.id;
+
+            const metodType = "u";
+            const token = req.headers.authorization 
+                     
+            let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+            if( testeEndpoit.testeAutorizacao == false){
+                throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
+            }
         
             await produto.findByIdAndUpdate(id, {$set: req.body});
             var item = await produto.findById(id);
@@ -95,6 +115,14 @@ class ProdutoController {
 
         try {
             const id = req.params.id;
+
+            const metodType = "d";
+            const token = req.headers.authorization 
+                     
+            let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+            if( testeEndpoit.testeAutorizacao == false){
+                throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
+            }
         
             await produto.findByIdAndDelete(id);
             res.status(200).json({messagem:"Produto deletado com sucesso"})
