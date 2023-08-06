@@ -13,10 +13,11 @@ class UsuarioController {
         try {
 
             const metodType = "r";
-            const token = req.headers.authorization          
-            
-            if( await AutenticadorPorEndpoit(token, this.gettable(), metodType) == false){
-                throw new Error("O usuario não tem perissão para realizar a ação")
+            const token = req.headers.authorization 
+                     
+            let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+            if( testeEndpoit.testeAutorizacao == false){
+                throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
             }
 
             const result = (await usuario.find())
@@ -27,6 +28,29 @@ class UsuarioController {
         }
     }
 
+    static getOne =async (req, res) =>{
+
+        
+        try {
+            const id = req.params.id;
+
+            const metodType = "r";
+            const token = req.headers.authorization          
+            let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+            if( testeEndpoit.testeAutorizacao == false){
+                throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
+            }
+
+            const item = await usuario.findById(id);
+            res.status(200).json(item)
+            
+            
+        } catch (error) {
+            res.status(404).json({ message: `${error.message} - Id não encontrado.`});
+        }
+        
+    }
+
     
    static createUser = async (req, res) =>{
         
@@ -35,8 +59,9 @@ class UsuarioController {
         const metodType = "c";
         const token = req.headers.authorization          
         
-        if( await AutenticadorPorEndpoit(token, this.gettable(), metodType) == false){
-            throw new Error("O usuario não tem perissão para realizar a ação")
+        let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+        if( testeEndpoit.testeAutorizacao == false){
+            throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
         }
 
         let reqUser = new usuario(req.body);
@@ -61,6 +86,51 @@ class UsuarioController {
         }
    }
 
+
+   static updater = async (req, res) =>{
+
+       try {
+        const id = req.params.id;
+
+        const metodType = "u";
+        const token = req.headers.authorization          
+        let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+        if( testeEndpoit.testeAutorizacao == false){
+            throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
+        }
+    
+        await usuario.findByIdAndUpdate(id, {$set: req.body});
+        let user = await usuario.findById(id);
+        let usuarioAualizado = {nome:user.nome, email:user.email, perfil:user.perfil}
+        let mensagem = {"messagem":"Usuario atualizado com sucesso", usuarioAualizado};
+        res.status(200).json(mensagem)
+  
+      } catch (erro) {
+        res.status(500).send({message: erro.message});
+      }
+
+}
+
+static deleter =async (req, res) =>{
+
+    try {
+        const id = req.params.id;
+
+        const metodType = "d";
+        const token = req.headers.authorization          
+        let testeEndpoit = await AutenticadorPorEndpoit(token, this.gettable(), metodType)
+        if( testeEndpoit.testeAutorizacao == false){
+            throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
+        }
+    
+        await usuario.findByIdAndDelete(id);
+        res.status(200).json({messagem:"Usuario deletado com sucesso"})
+  
+      } catch (erro) {
+        res.status(500).send({message: erro.message});
+      }
+
+}  
 
 }
 

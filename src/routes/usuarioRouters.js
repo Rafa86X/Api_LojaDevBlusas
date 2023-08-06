@@ -9,7 +9,11 @@ router.use(autenticater)
 
 router
     .get("/usuarios", usuario.findAll)
+    .get("/usuarios/:id", usuario.getOne)
     .post("/usuarios", usuario.createUser)
+    .put("/usuarios/:id", usuario.updater)
+    .delete("/usuarios/:id",usuario.deleter)
+
 
 
 

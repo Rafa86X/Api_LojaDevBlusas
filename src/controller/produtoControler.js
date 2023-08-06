@@ -103,6 +103,8 @@ class ProdutoController {
             res.status(500).send({message: erro.message});
           }
 
-}   }
+}   
+
+}
 
 export default ProdutoController

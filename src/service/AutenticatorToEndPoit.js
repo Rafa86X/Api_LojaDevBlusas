@@ -9,8 +9,9 @@ export async function AutenticadorPorEndpoit( token, tabela, endpoit) {
         const [, acssesToken] = token.split(" ");
         const { perfil } = decode(acssesToken);
         let perfilAutorizacao = await autPerfi.find({perfil});
+        let perfilEncontrado = perfilAutorizacao[0].perfil
         perfilAutorizacao= perfilAutorizacao[0].tabela_permisao.split(" ");
         const testeAutorizacao = perfilAutorizacao.includes(tabelaMetodo);
-        return testeAutorizacao
+        return {testeAutorizacao, perfil:perfilEncontrado }
     
 }

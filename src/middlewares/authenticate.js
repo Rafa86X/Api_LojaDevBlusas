@@ -28,6 +28,6 @@ export async function autenticater(req, res, next) {
                 return next()
             }
             catch (error) {
-                res.status(401).json({ message: `${error} erro no middwarer de autenticação` });
+                res.status(401).json({ message: `${error} Token invalido, ou ausência de token.` });
             }
 }
