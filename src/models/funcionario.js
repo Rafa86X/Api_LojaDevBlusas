@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const usuarioSchema = new mongoose.Schema(
+const funcSchema = new mongoose.Schema(
 	{
 		email: { type: String, required: true },
 		nome: { type: String, required: true },
@@ -12,6 +12,6 @@ const usuarioSchema = new mongoose.Schema(
 	}
 );
 
-const usuario = mongoose.model("usuario", usuarioSchema);
+const funcionario = mongoose.model("funcionario", funcSchema);
 
-export default usuario;
+export default funcionario;

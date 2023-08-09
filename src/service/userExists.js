@@ -1,7 +1,7 @@
-import usuario from "../models/Usuario.js";
+import funcionario from "../models/funcionario.js";
  const userExist = async (email)=>{
 
-    const itensResp = await usuario.find({email});
+    const itensResp = await funcionario.find({email});
     
 
     if(itensResp.length != 0)

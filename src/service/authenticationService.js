@@ -1,4 +1,4 @@
-import usuario from "../models/Usuario.js";
+import funcionario from "../models/funcionario.js";
 import { compare } from "bcrypt";
 import pkg from 'jsonwebtoken';
 const { sign } = pkg;
@@ -8,7 +8,7 @@ class AuthService {
 
     async login(dto){
 
-            let user = await usuario.find({email:dto.email}).limit(1);
+            let user = await funcionario.find({email:dto.email}).limit(1);
             user = user[0];
 
             const senhasIguais = await compare(dto.password, user.password)

@@ -1,10 +1,10 @@
-import usuario from "../models/Usuario.js";
+import funcionario from "../models/funcionario.js";
 import { hash } from "bcrypt";
 import userExist from "../service/userExists.js";
 import { AutenticadorPorEndpoit } from "../service/AutenticatorToEndPoit.js";
 
 
-class UsuarioController {
+class funcionarioController {
 
    static gettable = () =>{ return "usuarios"}
 
@@ -20,7 +20,7 @@ class UsuarioController {
                 throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
             }
 
-            const result = (await usuario.find())
+            const result = (await funcionario.find())
             res.status(200).json(result);
             
         } catch (error) {
@@ -41,7 +41,7 @@ class UsuarioController {
                 throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
             }
 
-            const item = await usuario.findById(id);
+            const item = await funcionario.findById(id);
             res.status(200).json(item)
             
             
@@ -64,7 +64,7 @@ class UsuarioController {
             throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
         }
 
-        let reqUser = new usuario(req.body);
+        let reqUser = new funcionario(req.body);
 
         const { email, password } = reqUser
 
@@ -99,8 +99,8 @@ class UsuarioController {
             throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
         }
     
-        await usuario.findByIdAndUpdate(id, {$set: req.body});
-        let user = await usuario.findById(id);
+        await funcionario.findByIdAndUpdate(id, {$set: req.body});
+        let user = await funcionario.findById(id);
         let usuarioAualizado = {nome:user.nome, email:user.email, perfil:user.perfil}
         let mensagem = {"messagem":"Usuario atualizado com sucesso", usuarioAualizado};
         res.status(200).json(mensagem)
@@ -123,7 +123,7 @@ static deleter =async (req, res) =>{
             throw new Error(`O perfil de usuário '${testeEndpoit.perfil}' não tem perissão para realizar a ação.`)
         }
     
-        await usuario.findByIdAndDelete(id);
+        await funcionario.findByIdAndDelete(id);
         res.status(200).json({messagem:"Usuario deletado com sucesso"})
   
       } catch (erro) {
@@ -134,4 +134,4 @@ static deleter =async (req, res) =>{
 
 }
 
-export default UsuarioController
+export default funcionarioController
